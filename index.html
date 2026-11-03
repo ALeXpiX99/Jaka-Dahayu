@@ -1,0 +1,126 @@
+<script>
+    const welcomeCover = document.getElementById('welcome-cover');
+    const btnOpen = document.getElementById('btn-open');
+    const bgMusic = document.getElementById('bg-music');
+    const musicControl = document.getElementById('music-control');
+    const musicIcon = document.getElementById('music-icon');
+    let isPlaying = false;
+
+    btnOpen.addEventListener('click', () => {
+        welcomeCover.classList.add('opacity-0', 'pointer-events-none');
+        musicControl.classList.remove('opacity-0', 'pointer-events-none');
+        playMusic();
+    });
+
+    function playMusic() {
+        bgMusic.play().then(() => {
+            isPlaying = true;
+            musicIcon.classList.add('animate-spin');
+        }).catch(error => {
+            console.log("Audio play deferred:", error);
+        });
+    }
+
+    function toggleMusic() {
+        if (isPlaying) {
+            bgMusic.pause();
+            isPlaying = false;
+            musicIcon.classList.remove('animate-spin');
+        } else {
+            bgMusic.play();
+            isPlaying = true;
+            musicIcon.classList.add('animate-spin');
+        }
+    }
+
+    musicControl.addEventListener('click', toggleMusic);
+
+    // Countdown Timer Target: 15 November 2026 08:00:00
+    const targetDate = new Date('November 15, 2026 08:00:00').getTime();
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+
+        if (difference > 0) {
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+        } else {
+            document.getElementById('countdown').innerHTML = `<p class="col-span-4 text-center text-sm font-semibold uppercase tracking-widest text-emerald-800">Acara Telah Berlangsung</p>`;
+        }
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Copy to Clipboard & Toast
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast("Nomor Rekening Berhasil Disalin!");
+        });
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.innerText = message;
+        toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        setTimeout(() => {
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+        }, 3000);
+    }
+
+    // Modal QRIS
+    const qrisModal = document.getElementById('qris-modal');
+    function openQrisModal() {
+        qrisModal.classList.remove('opacity-0', 'pointer-events-none');
+        qrisModal.classList.add('opacity-100');
+    }
+    function closeQrisModal() {
+        qrisModal.classList.remove('opacity-100');
+        qrisModal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    // RSVP Form Interactivity
+    const rsvpForm = document.getElementById('rsvp-form');
+    const wishesList = document.getElementById('wishes-list');
+
+    rsvpForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('guest-name').value;
+        const status = document.getElementById('guest-status').value;
+        const message = document.getElementById('guest-message').value;
+
+        const wishCard = document.createElement('div');
+        wishCard.className = 'border border-emerald-900/10 p-4 bg-white/60 rounded-xl space-y-2 shadow-sm transform transition-all duration-500 translate-y-2 opacity-0';
+        wishCard.innerHTML = `
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-sm text-emerald-950">${escapeHtml(name)}</span>
+                <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-medium">${escapeHtml(status)}</span>
+            </div>
+            <p class="text-xs text-neutral-600 font-light leading-relaxed">${escapeHtml(message)}</p>
+        `;
+
+        wishesList.insertBefore(wishCard, wishesList.firstChild);
+
+        setTimeout(() => {
+            wishCard.classList.remove('translate-y-2', 'opacity-0');
+        }, 50);
+
+        rsvpForm.reset();
+        showToast("Terima kasih atas ucapan & konfirmasinya!");
+    });
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+</script>
