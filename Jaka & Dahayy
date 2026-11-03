@@ -1,0 +1,533 @@
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Google Fonts (Playfair Display for elegant serif accents, Plus Jakarta Sans for clean readability) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    serif: ['"Playfair Display"', 'serif'],
+                },
+                colors: {
+                    sunda: {
+                        bg: '#fcfbf9',
+                        card: '#ffffff',
+                        soft: '#f3f1ec',
+                        green: '#3b4d3c',
+                        gold: '#b89753',
+                        dark: '#2c2a29',
+                        muted: '#706e6b'
+                    }
+                },
+                letterSpacing: {
+                    widest: '.25em',
+                    ultra: '.35em',
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    body {
+        background-color: #fcfbf9;
+        color: #2c2a29;
+        overflow-x: hidden;
+    }
+    
+    .bamboo-pattern {
+        background-image: radial-gradient(#b89753 0.75px, transparent 0.75px), radial-gradient(#3b4d3c 0.75px, #fcfbf9 0.75px);
+        background-size: 30px 30px;
+        background-position: 0 0, 15px 15px;
+        background-opacity: 0.05;
+    }
+
+    .border-glow {
+        box-shadow: 0 0 25px rgba(184, 151, 83, 0.12);
+    }
+
+    #toast {
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
+
+
+<!-- AUDIO PLAYER -->
+<audio id="bg-music" loop>
+    <source src="https://cdns.klimg.com/merdeka.com/down/file/2023/11/Ari_Lasso_-_Cinta_Terakhir_(getmp3.pro).mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<!-- MUSIC CONTROLLER BUTTON -->
+<button id="music-control" aria-label="Toggle Music" class="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-sunda-green text-white flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 opacity-0 pointer-events-none border border-sunda-gold/40">
+    <i id="music-icon" class="fa-solid fa-compact-disc text-xl animate-spin" style="animation-duration: 4s;"></i>
+</button>
+
+<!-- COVER PEMBUKA (FULLSCREEN OVERLAY) -->
+<div id="welcome-cover" class="fixed inset-0 z-50 bg-[#fcfbf9] flex flex-col items-center justify-between p-8 text-center transition-all duration-1000 ease-in-out">
+    <div class="mt-10 space-y-3">
+        <span class="text-xs uppercase tracking-ultra text-sunda-gold font-medium">The Wedding Invitation</span>
+        <h1 class="font-serif text-4xl sm:text-6xl font-bold tracking-wide text-sunda-dark">Jaka <span class="font-normal text-sunda-gold italic">&amp;</span> Dahayu</h1>
+        <p class="text-xs tracking-widest text-sunda-muted">15 . 11 . 2026</p>
+    </div>
+
+    <div class="relative my-6 w-60 h-72 sm:w-64 sm:h-80 border-2 border-sunda-gold/30 p-2 bg-white shadow-lg overflow-hidden rounded-t-full">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800" alt="Jaka & Dahayu" class="w-full h-full object-cover rounded-t-full filter contrast-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+    </div>
+
+    <div class="mb-8 space-y-5 max-w-sm w-full">
+        <p class="text-xs text-sunda-muted tracking-wider">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+        <div class="py-2.5 px-4 bg-white border border-sunda-gold/20 shadow-sm rounded-lg">
+            <span class="text-sm font-semibold tracking-wide text-sunda-dark">Tamu Undangan</span>
+        </div>
+        <button id="btn-open" class="w-full py-3.5 bg-sunda-green text-white font-medium tracking-widest text-xs uppercase hover:bg-[#2e3e2f] transition-all duration-300 flex items-center justify-center space-x-3 shadow-md group rounded-md">
+            <span>Buka Undangan</span>
+            <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
+        </button>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main id="main-content" class="max-w-4xl mx-auto border-x border-sunda-gold/20 bg-sunda-bg min-h-screen shadow-2xl">
+    
+    <!-- HERO SECTION -->
+    <section class="min-h-screen flex flex-col justify-center items-center text-center p-8 relative border-b border-sunda-gold/20">
+        <div class="space-y-6 max-w-xl">
+            <span class="text-xs tracking-ultra uppercase text-sunda-gold font-semibold block">Nuansa Sunda Elegant</span>
+            <h2 class="font-serif text-5xl sm:text-7xl font-bold tracking-wide text-sunda-dark">Jaka<br><span class="text-3xl sm:text-4xl font-normal text-sunda-gold italic">&amp;</span><br>Dahayu</h2>
+            <div class="w-20 h-px bg-sunda-gold mx-auto my-6"></div>
+            <p class="text-sm tracking-widest uppercase text-sunda-muted font-medium">Minggu, 15 November 2026</p>
+        </div>
+    </section>
+
+    <!-- QUOTE / AYAT / PANTUN SUNDA -->
+    <section class="py-20 px-8 text-center border-b border-sunda-gold/20 bg-white/60">
+        <div class="max-w-2xl mx-auto space-y-6">
+            <i class="fa-solid fa-quote-left text-2xl text-sunda-gold"></i>
+            <p class="text-sm sm:text-base font-light leading-relaxed tracking-wide text-sunda-dark italic">
+                "Silih asih, silih asah, silih asuh. Mugi Gusti Allah SWT ngaberkahan rumah tangga urang sadaya ku welas asih sareng katenraman."
+            </p>
+            <p class="text-xs uppercase tracking-widest font-semibold text-sunda-gold">— Ar-Rum: 21 &amp; Falsafah Sunda</p>
+        </div>
+    </section>
+
+    <!-- PROFIL MEMPELAI -->
+    <section class="py-24 px-6 border-b border-sunda-gold/20">
+        <div class="text-center mb-16 space-y-2">
+            <span class="text-xs uppercase tracking-ultra text-sunda-gold font-semibold">The Bride &amp; Groom</span>
+            <h3 class="font-serif text-3xl font-bold tracking-wide text-sunda-dark uppercase">Mempelai</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16">
+            <!-- Groom -->
+            <div class="flex flex-col items-center text-center space-y-6 group bg-white p-6 border border-sunda-gold/20 rounded-lg shadow-sm">
+                <div class="relative w-56 h-72 border-2 border-sunda-gold/30 p-2 overflow-hidden rounded-t-full bg-sunda-soft">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=600" alt="Jaka Pratama" class="w-full h-full object-cover rounded-t-full transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-serif text-2xl tracking-wide text-sunda-dark">Jaka Pratama, S.T.</h4>
+                    <p class="text-xs text-sunda-muted">Putra Pertama dari</p>
+                    <p class="text-xs font-medium text-sunda-dark">Bpk. Dadang &amp; Ibu Siti</p>
+                </div>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 text-xs tracking-widest uppercase border border-sunda-gold/40 px-4 py-2 rounded-full hover:bg-sunda-green hover:text-white hover:border-sunda-green transition-all">
+                    <i class="fa-brands fa-instagram text-sunda-gold group-hover:text-white"></i>
+                    <span>@jaka.pratama</span>
+                </a>
+            </div>
+
+            <!-- Bride -->
+            <div class="flex flex-col items-center text-center space-y-6 group bg-white p-6 border border-sunda-gold/20 rounded-lg shadow-sm">
+                <div class="relative w-56 h-72 border-2 border-sunda-gold/30 p-2 overflow-hidden rounded-t-full bg-sunda-soft">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" alt="Dahayu Kirana" class="w-full h-full object-cover rounded-t-full transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-serif text-2xl tracking-wide text-sunda-dark">Dahayu Kirana, M.Ds.</h4>
+                    <p class="text-xs text-sunda-muted">Putri Kedua dari</p>
+                    <p class="text-xs font-medium text-sunda-dark">Bpk. Hendra &amp; Ibu Rina</p>
+                </div>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 text-xs tracking-widest uppercase border border-sunda-gold/40 px-4 py-2 rounded-full hover:bg-sunda-green hover:text-white hover:border-sunda-green transition-all">
+                    <i class="fa-brands fa-instagram text-sunda-gold group-hover:text-white"></i>
+                    <span>@dahayu.kirana</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- COUNTDOWN TIMER -->
+    <section class="py-20 px-6 bg-sunda-green text-white text-center border-b border-sunda-gold/20">
+        <span class="text-xs uppercase tracking-ultra text-sunda-gold block mb-2 font-semibold">Counting Down To The Big Day</span>
+        <h3 class="font-serif text-2xl mb-8">Menuju Hari Bahagia</h3>
+        <div id="countdown" class="grid grid-cols-4 gap-3 sm:gap-6 max-w-lg mx-auto">
+            <div class="border border-sunda-gold/30 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
+                <span id="days" class="font-serif text-3xl sm:text-4xl font-bold block text-sunda-gold">00</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-200 mt-1 block">Hari</span>
+            </div>
+            <div class="border border-sunda-gold/30 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
+                <span id="hours" class="font-serif text-3xl sm:text-4xl font-bold block text-sunda-gold">00</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-200 mt-1 block">Jam</span>
+            </div>
+            <div class="border border-sunda-gold/30 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
+                <span id="minutes" class="font-serif text-3xl sm:text-4xl font-bold block text-sunda-gold">00</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-200 mt-1 block">Menit</span>
+            </div>
+            <div class="border border-sunda-gold/30 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
+                <span id="seconds" class="font-serif text-3xl sm:text-4xl font-bold block text-sunda-gold">00</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-200 mt-1 block">Detik</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENT DETAILS -->
+    <section class="py-24 px-6 border-b border-sunda-gold/20">
+        <div class="text-center mb-16 space-y-2">
+            <span class="text-xs uppercase tracking-ultra text-sunda-gold font-semibold">Save The Date</span>
+            <h3 class="font-serif text-3xl font-bold tracking-wide text-sunda-dark uppercase">Waktu &amp; Lokasi</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- AKAD -->
+            <div class="border border-sunda-gold/30 p-8 text-center space-y-6 bg-white flex flex-col justify-between rounded-lg shadow-sm">
+                <div class="space-y-4">
+                    <i class="fa-solid fa-ring text-3xl text-sunda-gold"></i>
+                    <h4 class="font-serif text-2xl tracking-wide text-sunda-dark">Akad Nikah</h4>
+                    <div class="w-12 h-px bg-sunda-gold mx-auto"></div>
+                    <p class="text-sm font-medium text-sunda-dark">Minggu, 15 November 2026</p>
+                    <p class="text-xs text-sunda-muted">08:00 WIB - 10:00 WIB</p>
+                </div>
+                <div class="space-y-4 pt-4 border-t border-sunda-gold/20">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-sunda-dark">The Trans Luxury Hotel Bandung</p>
+                    <p class="text-xs text-sunda-muted">Jl. Gatot Subroto No.289, Bandung</p>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="inline-block w-full py-3 bg-sunda-soft text-sunda-dark border border-sunda-gold/30 text-xs uppercase tracking-widest hover:bg-sunda-green hover:text-white hover:border-sunda-green transition-all rounded-md font-medium">
+                        <i class="fa-solid fa-location-dot mr-2 text-sunda-gold"></i> Petunjuk Google Maps
+                    </a>
+                </div>
+            </div>
+
+            <!-- RESEPSI -->
+            <div class="border border-sunda-gold/30 p-8 text-center space-y-6 bg-white flex flex-col justify-between rounded-lg shadow-sm">
+                <div class="space-y-4">
+                    <i class="fa-solid fa-glass-cheers text-3xl text-sunda-gold"></i>
+                    <h4 class="font-serif text-2xl tracking-wide text-sunda-dark">Resepsi</h4>
+                    <div class="w-12 h-px bg-sunda-gold mx-auto"></div>
+                    <p class="text-sm font-medium text-sunda-dark">Minggu, 15 November 2026</p>
+                    <p class="text-xs text-sunda-muted">11:00 WIB - Selesai</p>
+                </div>
+                <div class="space-y-4 pt-4 border-t border-sunda-gold/20">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-sunda-dark">The Trans Luxury Hotel Bandung</p>
+                    <p class="text-xs text-sunda-muted">Jl. Gatot Subroto No.289, Bandung</p>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="inline-block w-full py-3 bg-sunda-soft text-sunda-dark border border-sunda-gold/30 text-xs uppercase tracking-widest hover:bg-sunda-green hover:text-white hover:border-sunda-green transition-all rounded-md font-medium">
+                        <i class="fa-solid fa-location-dot mr-2 text-sunda-gold"></i> Petunjuk Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERI FOTO -->
+    <section class="py-24 px-6 border-b border-sunda-gold/20 bg-white/40">
+        <div class="text-center mb-16 space-y-2">
+            <span class="text-xs uppercase tracking-ultra text-sunda-gold font-semibold">Our Moments</span>
+            <h3 class="font-serif text-3xl font-bold tracking-wide text-sunda-dark uppercase">Galeri Prewedding</h3>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="aspect-square border border-sunda-gold/30 overflow-hidden group rounded-lg bg-white p-1">
+                <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=600" alt="Gallery 1" class="w-full h-full object-cover rounded-md group-hover:scale-105 transition-all duration-700 cursor-pointer">
+            </div>
+            <div class="aspect-square border border-sunda-gold/30 overflow-hidden group rounded-lg bg-white p-1">
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=600" alt="Gallery 2" class="w-full h-full object-cover rounded-md group-hover:scale-105 transition-all duration-700 cursor-pointer">
+            </div>
+            <div class="aspect-square border border-sunda-gold/30 overflow-hidden group rounded-lg bg-white p-1">
+                <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80&w=600" alt="Gallery 3" class="w-full h-full object-cover rounded-md group-hover:scale-105 transition-all duration-700 cursor-pointer">
+            </div>
+            <div class="aspect-square border border-sunda-gold/30 overflow-hidden group rounded-lg bg-white p-1">
+                <img src="https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&q=80&w=600" alt="Gallery 4" class="w-full h-full object-cover rounded-md group-hover:scale-105 transition-all duration-700 cursor-pointer">
+            </div>
+            <div class="aspect-square border border-sunda-gold/30 overflow-hidden group rounded-lg bg-white p-1">
+                <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=600" alt="Gallery 5" class="w-full h-full object-cover rounded-md group-hover:scale-105 transition-all duration-700 cursor-pointer">
+            </div>
+            <div class="aspect-square border border-sunda-gold/30 overflow-hidden group rounded-lg bg-white p-1">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=600" alt="Gallery 6" class="w-full h-full object-cover rounded-md group-hover:scale-105 transition-all duration-700 cursor-pointer">
+            </div>
+        </div>
+    </section>
+
+    <!-- AMPLOP DIGITAL / HADIAH -->
+    <section class="py-24 px-6 border-b border-sunda-gold/20">
+        <div class="text-center mb-16 space-y-4">
+            <span class="text-xs uppercase tracking-ultra text-sunda-gold font-semibold">Wedding Gift</span>
+            <h3 class="font-serif text-3xl font-bold tracking-wide text-sunda-dark uppercase">Amplop Digital</h3>
+            <p class="text-xs text-sunda-muted max-w-md mx-auto leading-relaxed">
+                Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda ingin memberikan tanda kasih, dapat melalui sarana di bawah ini:
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+            <!-- Rekening BCA -->
+            <div class="border border-sunda-gold/30 p-6 text-center space-y-4 bg-white rounded-lg shadow-sm relative">
+                <div class="flex justify-between items-center border-b border-sunda-gold/20 pb-4">
+                    <span class="font-bold tracking-widest text-lg text-sunda-green">BCA</span>
+                    <i class="fa-solid fa-credit-card text-sunda-gold"></i>
+                </div>
+                <div class="space-y-1">
+                    <p id="rek-bca" class="font-mono text-xl tracking-wider font-semibold text-sunda-dark">1234567890</p>
+                    <p class="text-xs text-sunda-muted uppercase">a.n Jaka Pratama</p>
+                </div>
+                <button onclick="copyToClipboard('1234567890')" class="w-full py-2.5 bg-sunda-soft hover:bg-sunda-green hover:text-white text-xs uppercase tracking-widest transition-all border border-sunda-gold/30 rounded-md font-medium">
+                    <i class="fa-regular fa-copy mr-2 text-sunda-gold"></i> Salin Rekening
+                </button>
+            </div>
+
+            <!-- Rekening Mandiri -->
+            <div class="border border-sunda-gold/30 p-6 text-center space-y-4 bg-white rounded-lg shadow-sm relative">
+                <div class="flex justify-between items-center border-b border-sunda-gold/20 pb-4">
+                    <span class="font-bold tracking-widest text-lg text-sunda-green">MANDIRI</span>
+                    <i class="fa-solid fa-credit-card text-sunda-gold"></i>
+                </div>
+                <div class="space-y-1">
+                    <p id="rek-mandiri" class="font-mono text-xl tracking-wider font-semibold text-sunda-dark">9876543210123</p>
+                    <p class="text-xs text-sunda-muted uppercase">a.n Dahayu Kirana</p>
+                </div>
+                <button onclick="copyToClipboard('9876543210123')" class="w-full py-2.5 bg-sunda-soft hover:bg-sunda-green hover:text-white text-xs uppercase tracking-widest transition-all border border-sunda-gold/30 rounded-md font-medium">
+                    <i class="fa-regular fa-copy mr-2 text-sunda-gold"></i> Salin Rekening
+                </button>
+            </div>
+        </div>
+
+        <!-- QRIS SECTION -->
+        <div class="mt-8 text-center">
+            <button onclick="openQrisModal()" class="inline-flex items-center space-x-2 border border-sunda-gold px-6 py-3.5 text-xs tracking-widest uppercase hover:bg-sunda-green hover:text-white hover:border-sunda-green transition-all bg-white text-sunda-dark rounded-md font-semibold shadow-sm">
+                <i class="fa-solid fa-qrcode text-sunda-gold"></i>
+                <span>Tampilkan QRIS Pembayaran</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- FORM RSVP & UCAPAN -->
+    <section class="py-24 px-6 border-b border-sunda-gold/20 bg-white/50">
+        <div class="text-center mb-16 space-y-2">
+            <span class="text-xs uppercase tracking-ultra text-sunda-gold font-semibold">RSVP &amp; Wishes</span>
+            <h3 class="font-serif text-3xl font-bold tracking-wide text-sunda-dark uppercase">Konfirmasi &amp; Ucapan</h3>
+        </div>
+
+        <div class="max-w-xl mx-auto space-y-12">
+            <!-- FORM -->
+            <form id="rsvp-form" class="space-y-6 bg-white p-8 border border-sunda-gold/30 rounded-lg shadow-sm">
+                <div>
+                    <label for="guest-name" class="block text-xs uppercase tracking-widest text-sunda-muted mb-2 font-medium">Nama Lengkap</label>
+                    <input type="text" id="guest-name" required class="w-full bg-sunda-bg border border-sunda-gold/30 p-3 text-sm text-sunda-dark focus:outline-none focus:border-sunda-green transition-all rounded-md" placeholder="Masukkan nama Anda">
+                </div>
+
+                <div>
+                    <label for="guest-status" class="block text-xs uppercase tracking-widest text-sunda-muted mb-2 font-medium">Konfirmasi Kehadiran</label>
+                    <select id="guest-status" required class="w-full bg-sunda-bg border border-sunda-gold/30 p-3 text-sm text-sunda-dark focus:outline-none focus:border-sunda-green transition-all rounded-md">
+                        <option value="Hadir">Ya, Saya Akan Hadir</option>
+                        <option value="Tidak Hadir">Maaf, Saya Tidak Bisa Hadir</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="guest-message" class="block text-xs uppercase tracking-widest text-sunda-muted mb-2 font-medium">Ucapan &amp; Doa Restu</label>
+                    <textarea id="guest-message" rows="4" required class="w-full bg-sunda-bg border border-sunda-gold/30 p-3 text-sm text-sunda-dark focus:outline-none focus:border-sunda-green transition-all rounded-md" placeholder="Tuliskan ucapan untuk kedua mempelai"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-sunda-green text-white font-semibold text-xs uppercase tracking-widest hover:bg-[#2e3e2f] transition-all rounded-md shadow-md">
+                    Kirim Ucapan &amp; Konfirmasi
+                </button>
+            </form>
+
+            <!-- DAFTAR UCAPAN -->
+            <div class="space-y-4 pt-8 border-t border-sunda-gold/20">
+                <h4 class="text-xs uppercase tracking-widest text-sunda-muted text-center mb-6 font-semibold">Ucapan dari Sahabat &amp; Keluarga</h4>
+                <div id="wishes-list" class="space-y-4 max-h-80 overflow-y-auto no-scrollbar pr-2">
+                    <!-- Default Wishes -->
+                    <div class="border border-sunda-gold/20 p-4 bg-white space-y-2 rounded-lg shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-sm text-sunda-dark">Reza &amp; Keluarga</span>
+                            <span class="text-[10px] bg-sunda-soft text-sunda-green font-semibold px-2 py-0.5 rounded border border-sunda-gold/20">Hadir</span>
+                        </div>
+                        <p class="text-xs text-sunda-muted font-light leading-relaxed">Barakallah, Jaka dan Dahayu! Semoga menjadi keluarga sakinah, mawaddah, warahmah. Lancar sampai hari H!</p>
+                    </div>
+                    <div class="border border-sunda-gold/20 p-4 bg-white space-y-2 rounded-lg shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-sm text-sunda-dark">Tersayang Neng Lilis</span>
+                            <span class="text-[10px] bg-sunda-soft text-sunda-green font-semibold px-2 py-0.5 rounded border border-sunda-gold/20">Hadir</span>
+                        </div>
+                        <p class="text-xs text-sunda-muted font-light leading-relaxed">Wilujeng tepang taun rumah tangga, eh wilujeng nikah! Semoga bahagia selalu selamanya.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 px-6 text-center bg-sunda-dark text-white space-y-3">
+        <h4 class="font-serif text-xl tracking-wide text-sunda-gold">Jaka &amp; Dahayu</h4>
+        <p class="text-[10px] uppercase tracking-ultra text-gray-300">Sunda Elegant White Digital Wedding Invitation</p>
+    </footer>
+</main>
+
+<!-- MODAL QRIS -->
+<div id="qris-modal" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-sm">
+    <div class="bg-white border border-sunda-gold p-6 max-w-sm w-full text-center space-y-6 relative rounded-lg shadow-2xl">
+        <button onclick="closeQrisModal()" aria-label="Close QRIS Modal" class="absolute top-4 right-4 text-sunda-muted hover:text-sunda-dark">
+            <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+        <h4 class="font-serif text-xl tracking-wide text-sunda-dark">QRIS Pembayaran</h4>
+        <div class="bg-sunda-soft p-4 inline-block mx-auto border border-sunda-gold/30 rounded-md">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=JAKA-DAHAYU-WEDDING" alt="QRIS Code" class="w-48 h-48">
+        </div>
+        <p class="text-xs text-sunda-muted">Scan menggunakan M-Banking atau E-Wallet (Gopay, OVO, Dana, ShopeePay)</p>
+    </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-sunda-green text-white px-6 py-3 text-xs uppercase tracking-widest font-semibold shadow-2xl opacity-0 pointer-events-none transform translate-y-4 rounded-md border border-sunda-gold/30">
+    Nomor Rekening Berhasil Disalin!
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    const welcomeCover = document.getElementById('welcome-cover');
+    const btnOpen = document.getElementById('btn-open');
+    const bgMusic = document.getElementById('bg-music');
+    const musicControl = document.getElementById('music-control');
+    const musicIcon = document.getElementById('music-icon');
+    let isPlaying = false;
+
+    btnOpen.addEventListener('click', () => {
+        welcomeCover.classList.add('opacity-0', 'pointer-events-none');
+        musicControl.classList.remove('opacity-0', 'pointer-events-none');
+        playMusic();
+    });
+
+    function playMusic() {
+        bgMusic.play().then(() => {
+            isPlaying = true;
+            musicIcon.classList.add('animate-spin');
+        }).catch(error => {
+            console.log("Audio play deferred:", error);
+        });
+    }
+
+    function toggleMusic() {
+        if (isPlaying) {
+            bgMusic.pause();
+            isPlaying = false;
+            musicIcon.classList.remove('animate-spin');
+        } else {
+            bgMusic.play();
+            isPlaying = true;
+            musicIcon.classList.add('animate-spin');
+        }
+    }
+
+    musicControl.addEventListener('click', toggleMusic);
+
+    // Countdown Timer Target: 15 November 2026 08:00:00
+    const targetDate = new Date('November 15, 2026 08:00:00').getTime();
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+
+        if (difference > 0) {
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+        } else {
+            document.getElementById('countdown').innerHTML = `<p class="col-span-4 text-center text-sm font-semibold uppercase tracking-widest text-white">Acara Telah Berlangsung</p>`;
+        }
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Copy to Clipboard & Toast
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast("Nomor Rekening Berhasil Disalin!");
+        });
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.innerText = message;
+        toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        setTimeout(() => {
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+        }, 3000);
+    }
+
+    // Modal QRIS
+    const qrisModal = document.getElementById('qris-modal');
+    function openQrisModal() {
+        qrisModal.classList.remove('opacity-0', 'pointer-events-none');
+        qrisModal.classList.add('opacity-100');
+    }
+    function closeQrisModal() {
+        qrisModal.classList.remove('opacity-100');
+        qrisModal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    // RSVP Form Interactivity
+    const rsvpForm = document.getElementById('rsvp-form');
+    const wishesList = document.getElementById('wishes-list');
+
+    rsvpForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('guest-name').value;
+        const status = document.getElementById('guest-status').value;
+        const message = document.getElementById('guest-message').value;
+
+        const wishCard = document.createElement('div');
+        wishCard.className = 'border border-sunda-gold/20 p-4 bg-white space-y-2 rounded-lg shadow-sm transform transition-all duration-500 translate-y-2 opacity-0';
+        wishCard.innerHTML = `
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-sm text-sunda-dark">${escapeHtml(name)}</span>
+                <span class="text-[10px] bg-sunda-soft text-sunda-green font-semibold px-2 py-0.5 rounded border border-sunda-gold/20">${escapeHtml(status)}</span>
+            </div>
+            <p class="text-xs text-sunda-muted font-light leading-relaxed">${escapeHtml(message)}</p>
+        `;
+
+        wishesList.insertBefore(wishCard, wishesList.firstChild);
+
+        setTimeout(() => {
+            wishCard.classList.remove('translate-y-2', 'opacity-0');
+        }, 50);
+
+        rsvpForm.reset();
+        showToast("Terima kasih atas ucapan & konfirmasinya!");
+    });
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+</script>
